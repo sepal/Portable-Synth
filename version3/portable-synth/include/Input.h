@@ -43,17 +43,19 @@ public:
         KEYBOARD_LAST = KEYBOARD_B2,
     };
 
-
-
 private:
     void readData();
 
     void updateKeyboard(KEYBOARD_BUTTONS button, bool pressed);
     void updatePad(int pad, bool pressed);
     void updateMenu(MENU_BUTTONS button, bool pressed);
+    void updateUtility(int key, bool pressed);
+    void updateEncoderButton(int encoder, bool pressed);
+    void updateEncoder(int encoder, int pos, bool moved_left);
 
     byte buttonStates[8] = {0,0,0,0,0,0,0,0}; 
     byte lastButtonStates[8] = {0,0,0,0,0,0,0,0};
+    int encoders[4] = {0,0,0,0};
 
     const byte MENU_BIT_MAPPIN[3] = {5, 4, 6};
 
@@ -91,5 +93,23 @@ private:
         6, 7, 0,
 // SW:  22 23 24
         5, 6, 7,
+    };
+
+    const byte UTILITY_BYTE_MAPPING[8] = {
+// SW:  4  5  6  7
+        0, 0, 0, 0,
+// SW:  11 12 13 14
+        1, 1, 1, 1,
+    };
+
+    const byte UTILITY_BIT_MAPPING[8] = {
+// SW:  4  5  6  7
+        3, 4, 5, 6,
+// SW:  11 12 13 14
+        2, 3, 4, 5,
+    };
+
+    const byte ENCODER_BIT_MAPPING[4] = {
+        0, 1, 2, 3,
     };
 }; 
