@@ -1,9 +1,15 @@
 #include <Arduino.h>
+#include <Wire.h>
+
+#include "Input.h"
+
+Input input;
 
 void setup() {
-  // put your setup code here, to run once:
+  Serial.begin(9600);
+  input.begin();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  input.update();
 }
