@@ -1,0 +1,3 @@
+[submodule "version3/portable-synth/lib/Audio"]
+	path = version3/portable-synth/lib/Audio
+	url = https://github.com/PaulStoffregen/Audio.git
