@@ -7,6 +7,10 @@ void Input::begin()
     Wire.begin();
 }
 
+void Input::setKeyboardHandler(KeyboardHandler* handler) {
+    this->keyboardHandler = handler;
+}
+
 void Input::update()
 {
     this->readData();
@@ -21,7 +25,7 @@ void Input::update()
     }
 
     // Check keyboard updates.
-    for (int i = KEYBOARD_FIRST; i <= KEYBOARD_LAST; i++)
+    for (int i = 0; i < 24; i++)
     {
         if (bitRead(buttonStates[KEYBOARD_BYTE_MAPPING[i]], KEYBOARD_BIT_MAPPING[i]) != bitRead(lastButtonStates[KEYBOARD_BYTE_MAPPING[i]], KEYBOARD_BIT_MAPPING[i]))
         {
@@ -120,13 +124,9 @@ void Input::updateMenu(MENU_BUTTONS button, bool pressed)
     }
 }
 
-void Input::updateKeyboard(KEYBOARD_BUTTONS button, bool pressed)
+void Input::updateKeyboard(int button, bool pressed)
 {
-    if (pressed)
-    {
-        Serial.print("Keyboard pressed ");
-        Serial.println(button, DEC);
-    }
+   this->keyboardHandler->keyboardEvent(button, pressed);
 }
 
 void Input::updatePad(int pad, bool pressed)
