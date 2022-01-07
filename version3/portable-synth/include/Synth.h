@@ -17,9 +17,10 @@ public:
 protected:
     int octave;
 
-    VoiceGroup voices;
-    AudioOutputI2S i2s1;
-    AudioMixer4 outputMixer;
-    AudioConnection *patchCord1;
-    AudioConnection *patchCord2;
+    VoiceGroup* voices;
+    AudioOutputI2S* i2s1;
+    AudioMixer4* outputMixer;
+    AudioConnection* voicesCord;
+    AudioConnection* patchCord1;
+    AudioConnection* patchCord2;
 };

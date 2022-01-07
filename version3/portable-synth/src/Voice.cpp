@@ -2,20 +2,20 @@
 
 Voice::Voice()
 {
-    // this->engine = new BadAssSynthEngine();
+    engine = new WaveFormSynthEngine();
 }
 
 void Voice::noteOn(int note, int velocity)
 {
 
-    this->engine.noteOn(note, velocity);
+    this->engine->noteOn(note, velocity);
     this->isNoteOn = true;
     this->currentNote = note;
 }
 
 void Voice::noteOff()
 {
-    this->engine.noteOff();
+    this->engine->noteOff();
     this->isNoteOn = false;
 }
 
@@ -29,7 +29,7 @@ bool Voice::isPlaying()
     return this->isNoteOn;
 }
 
-void Voice::connect(AudioStream &destination, int channel)
+AudioMixer4* Voice::getOutput()
 {
-    this->engine.connect(destination, channel);
+    return this->engine->getOutput();
 }

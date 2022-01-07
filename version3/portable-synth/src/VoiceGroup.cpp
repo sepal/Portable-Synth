@@ -2,41 +2,51 @@
 
 VoiceGroup::VoiceGroup()
 {
+    for (int i=0; i<MAX_VOICES; i++)
+    {
+        this->voices[i] = new Voice();
+    }
 
-    this->voices[0].connect(this->mixers[0], 0);
-    this->voices[1].connect(this->mixers[0], 1);
-    this->voices[2].connect(this->mixers[0], 2);
-    this->voices[3].connect(this->mixers[0], 3);
+    this->mixers[0] = new AudioMixer4();
+    this->mixers[1] = new AudioMixer4();
 
-    this->voices[0].connect(this->mixers[1], 0);
-    this->voices[1].connect(this->mixers[1], 1);
-    this->voices[2].connect(this->mixers[1], 2);
-    this->voices[3].connect(this->mixers[1], 3);
 
-    this->cords[0] = new AudioConnection(this->mixers[0], 0, this->output, 0);
-    this->cords[1] = new AudioConnection(this->mixers[1], 0, this->output, 1);
+    this->output = new AudioMixer4();
 
-    this->mixers[0].gain(0, 0.25);
-    this->mixers[0].gain(1, 0.25);
-    this->mixers[0].gain(2, 0.25);
-    this->mixers[0].gain(3, 0.25);
 
-    this->mixers[1].gain(0, 0.25);
-    this->mixers[1].gain(1, 0.25);
-    this->mixers[1].gain(2, 0.25);
-    this->mixers[1].gain(3, 0.25);
+    this->cords[0] = new AudioConnection(*this->voices[0]->getOutput(), 0, *this->mixers[0], 1);
+    this->cords[1] = new AudioConnection(*this->voices[1]->getOutput(), 0, *this->mixers[0], 2);
+    this->cords[2] = new AudioConnection(*this->voices[2]->getOutput(), 0, *this->mixers[0], 3);
+    this->cords[3] = new AudioConnection(*this->voices[3]->getOutput(), 0, *this->mixers[0], 4);
+    this->cords[4] = new AudioConnection(*this->voices[4]->getOutput(), 0, *this->mixers[1], 1);
+    this->cords[5] = new AudioConnection(*this->voices[5]->getOutput(), 0, *this->mixers[1], 2);
+    this->cords[6] = new AudioConnection(*this->voices[6]->getOutput(), 0, *this->mixers[1], 3);
+    this->cords[7] = new AudioConnection(*this->voices[7]->getOutput(), 0, *this->mixers[1], 4);
 
-    this->output.gain(0, 0.5);
-    this->output.gain(1, 0.5);
+    this->outputCord = new AudioConnection(*this->mixers[0], 0, *this->output, 0);
+    this->outputCord = new AudioConnection(*this->mixers[1], 0, *this->output, 1);
+
+    this->mixers[0]->gain(0, 0.25);
+    this->mixers[0]->gain(1, 0.25);
+    this->mixers[0]->gain(2, 0.25);
+    this->mixers[0]->gain(3, 0.25);
+
+    this->mixers[1]->gain(0, 0.25);
+    this->mixers[1]->gain(1, 0.25);
+    this->mixers[1]->gain(2, 0.25);
+    this->mixers[1]->gain(3, 0.25);
+
+    this->output->gain(0, 0.5);
+    this->output->gain(1, 0.5);
 }
 
 void VoiceGroup::noteOn(int note, int velocity)
 {
     for (int i = 0; i < MAX_VOICES; i++)
     {
-        if (!this->voices[i].isPlaying())
+        if (!this->voices[i]->isPlaying())
         {
-            this->voices[i].noteOn(note, velocity);
+            this->voices[i]->noteOn(note, velocity);
             Serial.print("Note on voice ");
             Serial.println(i, DEC);
             return;
@@ -48,17 +58,16 @@ void VoiceGroup::noteOff(int note)
 {
     for (int i = 0; i < MAX_VOICES; i++)
     {
-        if (this->voices[i].isPlaying() && this->voices[i].note() == note)
+        if (this->voices[i]->isPlaying() && this->voices[i]->note() == note)
         {
-            this->voices[i].noteOff();
+            this->voices[i]->noteOff();
             Serial.print("Note off voice ");
             Serial.println(i, DEC);
         }
     }
 }
 
-void VoiceGroup::connect(AudioStream &destination, int channel)
+AudioMixer4* VoiceGroup::getOutput()
 {
-    delete this->patchCord;
-    this->patchCord = new AudioConnection(this->output, 0, destination, channel);
+    return this->output;
 }

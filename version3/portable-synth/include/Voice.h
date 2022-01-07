@@ -17,10 +17,10 @@ public:
     int note();
     bool isPlaying();
 
-    void connect(AudioStream &destination, int channel);
+    AudioMixer4 *getOutput();
 
 protected:
-    FMSynthEngine engine;
+    SynthEngine* engine;
     int currentNote;
     bool isNoteOn;
 };

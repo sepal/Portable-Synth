@@ -15,12 +15,12 @@ public:
     void noteOn(int note, int velocity);
     void noteOff(int note);
 
-    void connect(AudioStream &destination, int channel);
+    AudioMixer4* getOutput();
 protected:
-    Voice voices[MAX_VOICES];
-    AudioMixer4 mixers[MAX_VOICES/4];
-    AudioConnection *cords[MAX_VOICES/4];
-    AudioConnection* patchCord = nullptr;
-    AudioMixer4 output;
+    Voice* voices[MAX_VOICES];
+    AudioMixer4* mixers[MAX_VOICES/4];
+    AudioConnection* cords[MAX_VOICES];
+    AudioConnection* outputCord;
+    AudioMixer4* output;
 };
 

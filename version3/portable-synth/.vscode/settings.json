@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "string": "cpp",
-        "initializer_list": "cpp"
+        "initializer_list": "cpp",
+        "limits": "cpp",
+        "type_traits": "cpp"
     }
 }
