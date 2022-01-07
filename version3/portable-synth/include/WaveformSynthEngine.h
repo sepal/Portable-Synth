@@ -97,9 +97,6 @@ public:
             break;
     
         }
-        Serial.print(freq);
-        Serial.print(" ");
-        Serial.println(q);
 
         AudioNoInterrupts();
         for (int i = 0; i < SYNTH_MAX_VOICES; i++)

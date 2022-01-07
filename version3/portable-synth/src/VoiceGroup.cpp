@@ -7,7 +7,6 @@ VoiceGroup::VoiceGroup(SynthManager* synth)
         this->voices[i] = new Voice(synth->getEngine(i));
     }
 
-        Serial.println("Init mixers");
     this->mixers[0] = new AudioMixer4();
     this->mixers[1] = new AudioMixer4();
 
@@ -67,11 +66,4 @@ void VoiceGroup::noteOff(int note)
 AudioMixer4* VoiceGroup::getOutput()
 {
     return this->output;
-}
-
-void forwardEncoderEvent() {
-    for (int i = 0; i < SYNTH_MAX_VOICES; i++)
-    {
-        
-    }
 }

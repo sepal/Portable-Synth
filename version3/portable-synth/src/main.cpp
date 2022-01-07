@@ -12,13 +12,15 @@ AudioControlSGTL5000 codec;
 Input input;
 
 WaveFormSynthManager* waveformSynth;
+FMSynthManager* fmSynth;
 Synth *synth;
 
 void setup()
 {
     Serial.begin(9600);
     waveformSynth = new WaveFormSynthManager();
-    synth = new Synth(waveformSynth);
+    fmSynth = new FMSynthManager();
+    synth = new Synth(fmSynth);
 
     codec.enable();
     codec.volume(0.2); // caution: very loud - use oscilloscope only!
@@ -28,7 +30,7 @@ void setup()
     
     input.begin();
     input.setKeyboardHandler(synth);
-    input.setEncoderHandler(waveformSynth);
+    input.setEncoderHandler(fmSynth);
 
 
     //Give Audio Library a lot of memory to work with

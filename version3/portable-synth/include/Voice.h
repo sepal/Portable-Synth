@@ -21,6 +21,6 @@ public:
 
 protected:
     SynthEngine* engine;
-    int currentNote;
-    bool isNoteOn;
+    int currentNote = 0;
+    bool isNoteOn = false;
 };

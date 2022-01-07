@@ -12,7 +12,6 @@ class FMSynthEngine : public SynthEngine
 public:
     FMSynthEngine()
     {
-        // AM and Ring
         this->sineFM = new AudioSynthWaveformModulated();
         this->sineFM->amplitude(1);
         this->sawtoothFM = new AudioSynthWaveformModulated();
@@ -41,7 +40,7 @@ public:
     {
 
         float freq = NOTE_FREQ[note];
-        this->sineModulator->frequency(freq);
+        Serial.println(note);
         this->sawtoothFM->frequency(freq);
         this->sineFM->frequency(freq);
         this->envelope->noteOn();
@@ -57,6 +56,22 @@ public:
         return this->output;
     }
 
+    inline void setModulatorFrequency(int freq)
+    {
+        this->sineModulator->frequency(freq);
+    }
+
+    inline void setModulatorAmplitude(float amp)
+    {
+        this->sineModulator->amplitude(amp);
+    }
+
+    void setShape(float shape)
+    {
+        this->mixer->gain(0, (1 - shape) * 0.3);
+        this->mixer->gain(1, shape * 0.2);
+    }
+
 private:
     AudioSynthWaveformModulated *sineFM;
     AudioSynthWaveformModulated *sawtoothFM;
@@ -67,27 +82,70 @@ private:
     AudioMixer4 *output;
 };
 
-
-class FMSynthManager: public EncoderHandler, public SynthManager
+class FMSynthManager : public EncoderHandler, public SynthManager
 {
 public:
     FMSynthManager()
     {
-        for (int i=0; i < SYNTH_MAX_VOICES; i++)
+        for (int i = 0; i < SYNTH_MAX_VOICES; i++)
         {
             this->engines[i] = new FMSynthEngine();
         }
+
+        this->setModulatorFrequency(modFreq);
+        this->setModulatorAmplitude(modAmp);
     }
 
-    virtual void encoderEvent(int encoder, int pos, bool moved_left)
+    virtual void encoderEvent(int encoder, bool moved_left)
     {
+        switch (encoder)
+        {
+        case 0:
+            modFreq += (moved_left) ? -1 : 1;
+            if (modFreq > 1000) modFreq = 1000;
+            if (modFreq < 0) modFreq = 0;
+            this->setModulatorFrequency(modFreq);
+            break;
 
+        case 1:
+            modAmp += (moved_left) ? -0.001 : 0.001;
+            if (modAmp > 0.5f) modAmp = 0.5f;
+            if (modAmp < 0.0f) modAmp = 0.0f;
+            AudioNoInterrupts();
+            this->setModulatorAmplitude(modAmp);
+            break;
+        }
     }
 
-    virtual SynthEngine* getEngine(int i) {
+    virtual SynthEngine *getEngine(int i)
+    {
         return this->engines[i];
     }
 
+    void setModulatorFrequency(float modFreq) {
+        Serial.print("Mod freq: ");
+        Serial.println(modFreq);
+        AudioNoInterrupts();
+        for (int i=0; i<SYNTH_MAX_VOICES; i++) {
+            this->engines[i]->setModulatorFrequency(modFreq);
+            AudioInterrupts();
+        }
+    }
+
+    void setModulatorAmplitude(float modFreq) {
+        Serial.print("Mod amp: ");
+        Serial.println(modAmp);
+        AudioNoInterrupts();
+        for (int i=0; i<SYNTH_MAX_VOICES; i++) {
+            this->engines[i]->setModulatorAmplitude(modFreq);
+        }
+        AudioInterrupts();
+    }
+
+
 private:
-    FMSynthEngine* engines[SYNTH_MAX_VOICES];
+    FMSynthEngine *engines[SYNTH_MAX_VOICES];
+
+    float modFreq = 0;
+    float modAmp = 0;
 };

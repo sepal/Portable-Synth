@@ -7,7 +7,8 @@ Voice::Voice(SynthEngine* engine)
 
 void Voice::noteOn(int note, int velocity)
 {
-
+    Serial.print("voice ");
+    Serial.println(note);
     this->engine->noteOn(note, velocity);
     this->isNoteOn = true;
     this->currentNote = note;
