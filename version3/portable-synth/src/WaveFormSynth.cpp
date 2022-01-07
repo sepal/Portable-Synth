@@ -1,26 +1,24 @@
 #include "WaveFormSynth.h"
 
-
-WaveFormSynth::WaveFormSynth() : 
-patchCord1(waveform1, 0, i2s1, 0),
-patchCord2(waveform1, 0, i2s1, 1)
+WaveFormSynth::WaveFormSynth()
 {
-  waveform1.begin(WAVEFORM_SINE);
-  this->octave = 4;
+    this->octave = 4;
+    this->voices.connect(this->outputMixer, 0);
+    this->patchCord1 = new AudioConnection(this->outputMixer, 0, i2s1, 0);
+    this->patchCord2 = new AudioConnection(this->outputMixer, 0, i2s1, 1);
 }
 
-
-void WaveFormSynth::keyboardEvent(int button, bool pressed) {
-
+void WaveFormSynth::keyboardEvent(int button, bool pressed)
+{
+    int n = octave * 12 + button;
     AudioNoInterrupts();
-    if (pressed) {
-        float f = NOTE_FREQ[octave * 12 + button];
-        waveform1.frequency(f);
-        waveform1.amplitude(1.0);
-        Serial.println(f);
+    if (pressed)
+    {
+        this->voices.noteOn(n, 127);
     }
-    else {
-        waveform1.amplitude(0.0);
+    else
+    {
+        this->voices.noteOff(n);
     }
     AudioInterrupts();
 }
