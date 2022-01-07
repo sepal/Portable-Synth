@@ -2,7 +2,7 @@
 
 Voice::Voice()
 {
-  waveform1.begin(WAVEFORM_SINE);
+  waveform1.begin(WAVEFORM_SAWTOOTH);
 }
 
 void Voice::noteOn(int note, int velocity) {

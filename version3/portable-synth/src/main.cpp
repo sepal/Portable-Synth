@@ -3,12 +3,12 @@
 #include <Audio.h>
 
 #include "Input.h"
-#include "WaveFormSynth.h"
+#include "Synth.h"
 
 AudioControlSGTL5000 codec;
 
 Input input;
-WaveFormSynth synth;
+Synth synth;
 
 void setup()
 {

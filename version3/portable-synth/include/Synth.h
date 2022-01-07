@@ -6,10 +6,10 @@
 #include "AudioConstants.h"
 #include "VoiceGroup.h"
 
-class WaveFormSynth : public KeyboardHandler
+class Synth : public KeyboardHandler
 {
 public:
-    WaveFormSynth();
+    Synth();
 
     void keyboardEvent(int button, bool pressed);
 

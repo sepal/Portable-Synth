@@ -1,6 +1,6 @@
-#include "WaveFormSynth.h"
+#include "Synth.h"
 
-WaveFormSynth::WaveFormSynth()
+Synth::Synth()
 {
     this->octave = 4;
     this->voices.connect(this->outputMixer, 0);
@@ -8,7 +8,7 @@ WaveFormSynth::WaveFormSynth()
     this->patchCord2 = new AudioConnection(this->outputMixer, 0, i2s1, 1);
 }
 
-void WaveFormSynth::keyboardEvent(int button, bool pressed)
+void Synth::keyboardEvent(int button, bool pressed)
 {
     int n = octave * 12 + button;
     AudioNoInterrupts();
