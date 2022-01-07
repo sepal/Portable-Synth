@@ -10,3 +10,10 @@ public:
     virtual void noteOff();
     virtual AudioMixer4 *getOutput();
 };
+
+
+class SynthManager
+{
+public:
+    virtual SynthEngine* getEngine(int i);
+};

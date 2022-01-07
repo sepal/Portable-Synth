@@ -11,6 +11,10 @@ void Input::setKeyboardHandler(KeyboardHandler* handler) {
     this->keyboardHandler = handler;
 }
 
+void Input::setEncoderHandler(EncoderHandler* handler) {
+    this->encoderHandler = handler;
+}
+
 void Input::update()
 {
     this->readData();
@@ -68,12 +72,11 @@ void Input::update()
             byte enc_val = buttonStates[7] & mask;
             enc_val = enc_val >> i*2;
             if (enc_val == 2){
-                encoders[i]--;
+                updateEncoder(i, true);
             }
             else if (enc_val == 1){
-                encoders[i]++;
+                updateEncoder(i, false);
             }
-            updateEncoder(i, encoders[i], enc_val == 2);
         }
     }
 }
@@ -155,9 +158,6 @@ void Input::updateEncoderButton(int encoder, bool pressed) {
     }
 }
 
-void Input::updateEncoder(int encoder, int pos, bool moved_left) {
-    Serial.print("Encoder ");
-    Serial.print(encoder, DEC);
-    Serial.print(" moved to pos ");
-    Serial.println(pos, DEC);
+void Input::updateEncoder(int encoder, bool moved_left) {
+    if (this->encoderHandler) encoderHandler->encoderEvent(encoder, moved_left);
 }

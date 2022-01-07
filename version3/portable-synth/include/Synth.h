@@ -10,13 +10,14 @@
 class Synth : public KeyboardHandler
 {
 public:
-    Synth();
+    Synth(SynthManager* initialSynth);
 
     void keyboardEvent(int button, bool pressed);
 
 protected:
     int octave;
 
+    SynthManager* synth;
     VoiceGroup* voices;
     AudioOutputI2S* i2s1;
     AudioMixer4* outputMixer;

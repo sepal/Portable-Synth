@@ -1,12 +1,13 @@
 #include "VoiceGroup.h"
 
-VoiceGroup::VoiceGroup()
+VoiceGroup::VoiceGroup(SynthManager* synth)
 {
-    for (int i=0; i<MAX_VOICES; i++)
+    for (int i=0; i<SYNTH_MAX_VOICES; i++)
     {
-        this->voices[i] = new Voice();
+        this->voices[i] = new Voice(synth->getEngine(i));
     }
 
+        Serial.println("Init mixers");
     this->mixers[0] = new AudioMixer4();
     this->mixers[1] = new AudioMixer4();
 
@@ -42,13 +43,11 @@ VoiceGroup::VoiceGroup()
 
 void VoiceGroup::noteOn(int note, int velocity)
 {
-    for (int i = 0; i < MAX_VOICES; i++)
+    for (int i = 0; i < SYNTH_MAX_VOICES; i++)
     {
         if (!this->voices[i]->isPlaying())
         {
             this->voices[i]->noteOn(note, velocity);
-            Serial.print("Note on voice ");
-            Serial.println(i, DEC);
             return;
         }
     }
@@ -56,13 +55,11 @@ void VoiceGroup::noteOn(int note, int velocity)
 
 void VoiceGroup::noteOff(int note)
 {
-    for (int i = 0; i < MAX_VOICES; i++)
+    for (int i = 0; i < SYNTH_MAX_VOICES; i++)
     {
         if (this->voices[i]->isPlaying() && this->voices[i]->note() == note)
         {
             this->voices[i]->noteOff();
-            Serial.print("Note off voice ");
-            Serial.println(i, DEC);
         }
     }
 }
@@ -70,4 +67,11 @@ void VoiceGroup::noteOff(int note)
 AudioMixer4* VoiceGroup::getOutput()
 {
     return this->output;
+}
+
+void forwardEncoderEvent() {
+    for (int i = 0; i < SYNTH_MAX_VOICES; i++)
+    {
+        
+    }
 }

@@ -1,10 +1,11 @@
 #include "Synth.h"
 
-Synth::Synth()
+Synth::Synth(SynthManager* initialSynth)
 {
     this->octave = 4;
+    this->synth = initialSynth;
 
-    this->voices = new VoiceGroup();
+    this->voices = new VoiceGroup(this->synth);
     this->outputMixer = new AudioMixer4();
     this->i2s1 = new AudioOutputI2S();
     

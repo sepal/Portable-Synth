@@ -1,8 +1,8 @@
 #include "Voice.h"
 
-Voice::Voice()
+Voice::Voice(SynthEngine* engine)
 {
-    engine = new WaveFormSynthEngine();
+    this->engine = engine;
 }
 
 void Voice::noteOn(int note, int velocity)

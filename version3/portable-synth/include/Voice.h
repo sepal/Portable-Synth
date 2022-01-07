@@ -10,7 +10,7 @@
 class Voice
 {
 public:
-    Voice();
+    Voice(SynthEngine* engine);
     void noteOn(int note, int velocity);
     void noteOff();
 

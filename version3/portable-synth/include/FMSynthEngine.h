@@ -2,6 +2,7 @@
 
 #include <Audio.h>
 #include "SynthEngine.h"
+#include "Input.h"
 
 /**
  * SynthEngine based on https://github.com/ghostintranslation/synth.
@@ -64,4 +65,29 @@ private:
     AudioEffectEnvelope *envelope;
     AudioConnection *patchCords[7];
     AudioMixer4 *output;
+};
+
+
+class FMSynthManager: public EncoderHandler, public SynthManager
+{
+public:
+    FMSynthManager()
+    {
+        for (int i=0; i < SYNTH_MAX_VOICES; i++)
+        {
+            this->engines[i] = new FMSynthEngine();
+        }
+    }
+
+    virtual void encoderEvent(int encoder, int pos, bool moved_left)
+    {
+
+    }
+
+    virtual SynthEngine* getEngine(int i) {
+        return this->engines[i];
+    }
+
+private:
+    FMSynthEngine* engines[SYNTH_MAX_VOICES];
 };

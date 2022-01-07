@@ -73,3 +73,5 @@ const float VELOCITY_CURVES[3][128] = {
         0.984, 1.000
     }
 };
+
+#define SYNTH_MAX_VOICES 8
