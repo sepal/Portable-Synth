@@ -2,7 +2,7 @@
 
 #include <Audio.h>
 #include "Voice.h"
-
+#include "SynthEngine.h"
 
 #define MAX_VOICES 8
 

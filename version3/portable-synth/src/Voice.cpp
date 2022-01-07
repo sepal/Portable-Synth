@@ -2,31 +2,34 @@
 
 Voice::Voice()
 {
-  waveform1.begin(WAVEFORM_SAWTOOTH);
+    // this->engine = new BadAssSynthEngine();
 }
 
-void Voice::noteOn(int note, int velocity) {
-    this->waveform1.frequency(NOTE_FREQ[note]);
-    this->waveform1.amplitude(VELOCITY_CURVES[0][velocity]);
+void Voice::noteOn(int note, int velocity)
+{
+
+    this->engine.noteOn(note, velocity);
     this->isNoteOn = true;
     this->currentNote = note;
 }
 
-void Voice::noteOff() {
-    this->waveform1.amplitude(0);
+void Voice::noteOff()
+{
+    this->engine.noteOff();
     this->isNoteOn = false;
 }
 
-int Voice::note() {
+int Voice::note()
+{
     return this->currentNote;
 }
 
-bool Voice::isPlaying() {
+bool Voice::isPlaying()
+{
     return this->isNoteOn;
 }
 
-void Voice::connect(AudioStream &destination, int channel) {
-    delete this->patchCord;
-
-    this->patchCord = new AudioConnection(this->waveform1, 0, destination, channel);
+void Voice::connect(AudioStream &destination, int channel)
+{
+    this->engine.connect(destination, channel);
 }

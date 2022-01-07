@@ -3,6 +3,10 @@
 #include <Audio.h>
 #include "AudioConstants.h"
 
+#include "SynthEngine.h"
+#include "FMSynthEngine.h"
+#include "WaveformSynthEngine.h"
+
 class Voice
 {
 public:
@@ -16,8 +20,7 @@ public:
     void connect(AudioStream &destination, int channel);
 
 protected:
-    AudioSynthWaveform waveform1;
-    AudioConnection* patchCord;
+    FMSynthEngine engine;
     int currentNote;
     bool isNoteOn;
 };

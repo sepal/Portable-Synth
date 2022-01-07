@@ -4,6 +4,7 @@
 #include <Audio.h>
 #include "Input.h"
 #include "AudioConstants.h"
+#include "SynthEngine.h"
 #include "VoiceGroup.h"
 
 class Synth : public KeyboardHandler
