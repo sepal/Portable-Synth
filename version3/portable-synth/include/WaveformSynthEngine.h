@@ -2,7 +2,7 @@
 
 #include <Audio.h>
 #include "AudioConstants.h"
-#include "Input.h"
+#include "InputHandler.h"
 #include "SynthEngine.h"
 
 class WaveFormSynthEngine : public SynthEngine

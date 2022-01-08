@@ -1,18 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-
-class KeyboardHandler
-{
-public:
-    virtual void keyboardEvent(int button, bool pressed);
-};
-
-class EncoderHandler
-{
-public:
-    virtual void encoderEvent(int encoder, bool moved_left);
-};
+#include "InputHandler.h"
 
 class Input
 {

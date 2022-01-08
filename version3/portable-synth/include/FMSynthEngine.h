@@ -2,7 +2,7 @@
 
 #include <Audio.h>
 #include "SynthEngine.h"
-#include "Input.h"
+#include "InputHandler.h"
 
 /**
  * SynthEngine based on https://github.com/ghostintranslation/synth.
