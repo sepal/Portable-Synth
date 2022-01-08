@@ -79,6 +79,22 @@ public:
         this->mixer->gain(1, shape * 0.2);
     }
 
+    void setAttack(float attack) {
+        this->envelope->attack(attack);
+    }
+
+    void setDecay(float attack) {
+        this->envelope->decay(attack);
+    }
+
+    void setSustain(float level) {
+        this->envelope->sustain(level);
+    }
+
+    void setRelease(float release) {
+        this->envelope->release(release);
+    }
+
 private:
     AudioSynthWaveformModulated *sineFM;
     AudioSynthWaveformModulated *sawtoothFM;
@@ -108,6 +124,79 @@ public:
 
     virtual void encoderEvent(int encoder, bool moved_left)
     {
+        switch (page)
+        {
+        case PAGE_ADSR:
+            this->handleADSRPage(encoder, moved_left);
+            break;
+        
+        case PAGE_MODULATION:
+            this->handleModulationPage(encoder, moved_left);
+            break;
+        }
+    }
+
+    virtual void nextPage()
+    {
+        switch (page)
+        {
+        case PAGE_ADSR:
+            page = PAGE_MODULATION;
+            break;
+        case PAGE_MODULATION:
+            page = PAGE_ADSR;
+            break;
+        }
+    }
+
+    virtual void prevPage()
+    {
+        switch (page)
+        {
+        case PAGE_ADSR:
+            page = PAGE_MODULATION;
+            break;
+        case PAGE_MODULATION:
+            page = PAGE_ADSR;
+            break;
+        }
+    }
+
+    virtual SynthEngine *getEngine(int i)
+    {
+        return this->engines[i];
+    }
+
+    void handleADSRPage(int encoder, bool moved_left)
+    {
+        switch(encoder)
+        {
+        case 0:
+            this->attack += moved_left ? -0.1 : 1;
+            this->setAttack(attack);
+            Serial.println(attack);
+            break;
+        case 1:
+            this->decay += moved_left ? -1 : 1;
+            this->setDecay(decay);
+            Serial.println(decay);
+            break;
+        case 2:
+            this->sustain += moved_left ? -0.01f : 0.01f;
+            this->setSustain(sustain);
+            Serial.println(sustain);
+            break;
+        case 3:
+            this->release += moved_left ? -1 : 1;
+            this->setRelease(release);
+            Serial.println(release);
+            break;
+        }
+    }
+
+    void handleModulationPage(int encoder, bool moved_left)
+    {
+
         switch (encoder)
         {
         case 0:
@@ -134,21 +223,6 @@ public:
             this->setModulatorAmplitude(modAmp);
             break;
         }
-    }
-
-    virtual void nextPage()
-    {
-
-    }
-
-    virtual void prevPage()
-    {
-        
-    }
-
-    virtual SynthEngine *getEngine(int i)
-    {
-        return this->engines[i];
     }
 
     void setModulatorFrequency(float modFreq)
@@ -188,10 +262,66 @@ public:
         AudioInterrupts();
     }
 
+    void setAttack(float attack)
+    {
+
+        AudioNoInterrupts();
+        for (int i = 0; i < SYNTH_MAX_VOICES; i++)
+        {
+            this->engines[i]->setAttack(attack);
+        }
+        AudioInterrupts();
+    }
+
+    void setDecay(float decay)
+    {
+
+        AudioNoInterrupts();
+        for (int i = 0; i < SYNTH_MAX_VOICES; i++)
+        {
+            this->engines[i]->setDecay(decay);
+        }
+        AudioInterrupts();
+    }
+
+    void setSustain(float sustain)
+    {
+
+        AudioNoInterrupts();
+        for (int i = 0; i < SYNTH_MAX_VOICES; i++)
+        {
+            this->engines[i]->setSustain(sustain);
+        }
+        AudioInterrupts();
+    }
+
+    void setRelease(float release)
+    {
+
+        AudioNoInterrupts();
+        for (int i = 0; i < SYNTH_MAX_VOICES; i++)
+        {
+            this->engines[i]->setRelease(release);
+        }
+        AudioInterrupts();
+    }
+
 private:
     FMSynthEngine *engines[SYNTH_MAX_VOICES];
 
     int modFreqMult = 3;
     float modFreq = 0;
     float modAmp = 0.5;
+    float attack = 10.0f;
+    float decay = 35.0f;
+    float sustain = 0.5f;
+    float release = 300.0f;
+
+    enum PAGE
+    {
+        PAGE_ADSR,
+        PAGE_MODULATION,
+    };
+
+    PAGE page = PAGE_ADSR;
 };

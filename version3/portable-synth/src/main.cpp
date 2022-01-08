@@ -25,7 +25,7 @@ void setup()
     Serial.begin(9600);
     waveformSynth = new WaveFormSynthManager();
     fmSynth = new FMSynthManager();
-    synth = new Synth(waveformSynth);
+    synth = new Synth(fmSynth);
 
     output = new AudioMixer4();
     i2s1 = new AudioOutputI2S();
@@ -46,7 +46,7 @@ void setup()
     input.begin();
     input.setKeyboardHandler(synth);
     input.setMenuButtonHandler(synth);
-    input.setEncoderHandler(waveformSynth);
+    input.setEncoderHandler(fmSynth);
 
 
 
@@ -58,7 +58,5 @@ void setup()
 
 void loop()
 {
-    AudioNoInterrupts();
     input.update();
-    AudioInterrupts();
 }
