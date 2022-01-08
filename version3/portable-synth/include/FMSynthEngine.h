@@ -43,6 +43,8 @@ public:
         Serial.println(note);
         this->sawtoothFM->frequency(freq);
         this->sineFM->frequency(freq);
+        this->setModulatorFrequency(freq * modFreqMultiplier);
+        Serial.println(freq * 2);
         this->envelope->noteOn();
     }
 
@@ -59,6 +61,11 @@ public:
     inline void setModulatorFrequency(int freq)
     {
         this->sineModulator->frequency(freq);
+    }
+
+    inline void setModulatorFrequencyMultiplayer(int multiplier)
+    {
+        this->modFreqMultiplier = multiplier;
     }
 
     inline void setModulatorAmplitude(float amp)
@@ -80,6 +87,8 @@ private:
     AudioEffectEnvelope *envelope;
     AudioConnection *patchCords[7];
     AudioMixer4 *output;
+
+    int modFreqMultiplier = 1;
 };
 
 class FMSynthManager : public EncoderHandler, public SynthManager
@@ -92,7 +101,8 @@ public:
             this->engines[i] = new FMSynthEngine();
         }
 
-        this->setModulatorFrequency(modFreq);
+        // this->setModulatorFrequency(modFreq);
+        this->setModulatorFreqMultiplier(modFreqMult);
         this->setModulatorAmplitude(modAmp);
     }
 
@@ -101,16 +111,25 @@ public:
         switch (encoder)
         {
         case 0:
-            modFreq += (moved_left) ? -1 : 1;
-            if (modFreq > 1000) modFreq = 1000;
-            if (modFreq < 0) modFreq = 0;
-            this->setModulatorFrequency(modFreq);
+            // modFreq += (moved_left) ? -1 : 1;
+            // if (modFreq > 1000) modFreq = 1000;
+            // if (modFreq < 0) modFreq = 0;
+            // this->setModulatorFrequency(modFreq);
+
+            modFreqMult += moved_left ? -1 : 1;
+            if (modFreqMult > 10)
+                modFreqMult = 10;
+            if (modFreqMult < 0)
+                modFreqMult = 0;
+            this->setModulatorFreqMultiplier(modFreqMult);
             break;
 
         case 1:
             modAmp += (moved_left) ? -0.001 : 0.001;
-            if (modAmp > 0.5f) modAmp = 0.5f;
-            if (modAmp < 0.0f) modAmp = 0.0f;
+            if (modAmp > 0.5f)
+                modAmp = 0.5f;
+            if (modAmp < 0.0f)
+                modAmp = 0.0f;
             AudioNoInterrupts();
             this->setModulatorAmplitude(modAmp);
             break;
@@ -122,30 +141,47 @@ public:
         return this->engines[i];
     }
 
-    void setModulatorFrequency(float modFreq) {
+    void setModulatorFrequency(float modFreq)
+    {
         Serial.print("Mod freq: ");
         Serial.println(modFreq);
         AudioNoInterrupts();
-        for (int i=0; i<SYNTH_MAX_VOICES; i++) {
+        for (int i = 0; i < SYNTH_MAX_VOICES; i++)
+        {
             this->engines[i]->setModulatorFrequency(modFreq);
-            AudioInterrupts();
         }
+        AudioInterrupts();
     }
 
-    void setModulatorAmplitude(float modFreq) {
+    void setModulatorFreqMultiplier(int multiplier)
+    {
+        Serial.print("Mod freq multiplier: ");
+        Serial.println(modFreqMult);
+
+        AudioNoInterrupts();
+        for (int i = 0; i < SYNTH_MAX_VOICES; i++)
+        {
+            this->engines[i]->setModulatorFrequencyMultiplayer(multiplier);
+        }
+        AudioInterrupts();
+    }
+
+    void setModulatorAmplitude(float modFreq)
+    {
         Serial.print("Mod amp: ");
         Serial.println(modAmp);
         AudioNoInterrupts();
-        for (int i=0; i<SYNTH_MAX_VOICES; i++) {
+        for (int i = 0; i < SYNTH_MAX_VOICES; i++)
+        {
             this->engines[i]->setModulatorAmplitude(modFreq);
         }
         AudioInterrupts();
     }
 
-
 private:
     FMSynthEngine *engines[SYNTH_MAX_VOICES];
 
+    int modFreqMult = 3;
     float modFreq = 0;
-    float modAmp = 0;
+    float modAmp = 0.5;
 };
