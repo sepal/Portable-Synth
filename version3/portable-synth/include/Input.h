@@ -12,20 +12,16 @@ public:
 
     void setKeyboardHandler(KeyboardHandler* handler);
     void setEncoderHandler(EncoderHandler* handler);
+    void setMenuButtonHandler(MenuButtonHandler* handler);
 
-    enum MENU_BUTTONS
-    {
-        MENU_MAIN,
-        MENU_LEFT,
-        MENU_RIGHT,
-    };
+  
 
 private:
     void readData();
 
     void updateKeyboard(int button, bool pressed);
     void updatePad(int pad, bool pressed);
-    void updateMenu(MENU_BUTTONS button, bool pressed);
+    void updateMenu(MenuButtonHandler::BUTTONS button, bool pressed);
     void updateUtility(int key, bool pressed);
     void updateEncoderButton(int encoder, bool pressed);
     void updateEncoder(int encoder, bool moved_left);
@@ -37,6 +33,7 @@ private:
 
     KeyboardHandler* keyboardHandler;
     EncoderHandler* encoderHandler;
+    MenuButtonHandler* menuButtonHandler;
 
     const byte KEYBOARD_BYTE_MAPPING[24] = {
         3, // SW25

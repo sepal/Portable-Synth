@@ -7,12 +7,19 @@ void Input::begin()
     Wire.begin();
 }
 
-void Input::setKeyboardHandler(KeyboardHandler* handler) {
+void Input::setKeyboardHandler(KeyboardHandler *handler)
+{
     this->keyboardHandler = handler;
 }
 
-void Input::setEncoderHandler(EncoderHandler* handler) {
+void Input::setEncoderHandler(EncoderHandler *handler)
+{
     this->encoderHandler = handler;
+}
+
+void Input::setMenuButtonHandler(MenuButtonHandler *handler)
+{
+    this->menuButtonHandler = handler;
 }
 
 void Input::update()
@@ -65,22 +72,25 @@ void Input::update()
     }
 
     // Update encoders.
-    if (lastButtonStates[7] != buttonStates[7]) {
-        for (int i = 0; i < 4; i++){
+    if (lastButtonStates[7] != buttonStates[7])
+    {
+        for (int i = 0; i < 4; i++)
+        {
             byte mask = B00000011;
-            mask = mask << i*2;
+            mask = mask << i * 2;
             byte enc_val = buttonStates[7] & mask;
-            enc_val = enc_val >> i*2;
-            if (enc_val == 2){
+            enc_val = enc_val >> i * 2;
+            if (enc_val == 2)
+            {
                 updateEncoder(i, true);
             }
-            else if (enc_val == 1){
+            else if (enc_val == 1)
+            {
                 updateEncoder(i, false);
             }
         }
     }
 }
-
 
 void Input::readData()
 {
@@ -108,28 +118,17 @@ void Input::readData()
     }
 }
 
-void Input::updateMenu(MENU_BUTTONS button, bool pressed)
+void Input::updateMenu(MenuButtonHandler::BUTTONS button, bool pressed)
 {
-    switch (button)
+    if (this->menuButtonHandler)
     {
-    case Input::MENU_MAIN:
-        Serial.print("Main menu: ");
-        Serial.println(pressed, DEC);
-        break;
-    case Input::MENU_LEFT:
-        Serial.print("Left menu: ");
-        Serial.println(pressed, DEC);
-        break;
-    case Input::MENU_RIGHT:
-        Serial.print("Right menu: ");
-        Serial.println(pressed, DEC);
-        break;
+        this->menuButtonHandler->menuButtonEvent(button, pressed);
     }
 }
 
 void Input::updateKeyboard(int button, bool pressed)
 {
-   this->keyboardHandler->keyboardEvent(button, pressed);
+    this->keyboardHandler->keyboardEvent(button, pressed);
 }
 
 void Input::updatePad(int pad, bool pressed)
@@ -150,7 +149,8 @@ void Input::updateUtility(int key, bool pressed)
     }
 }
 
-void Input::updateEncoderButton(int encoder, bool pressed) {
+void Input::updateEncoderButton(int encoder, bool pressed)
+{
     if (pressed)
     {
         Serial.print("Encoder pressed ");
@@ -158,6 +158,8 @@ void Input::updateEncoderButton(int encoder, bool pressed) {
     }
 }
 
-void Input::updateEncoder(int encoder, bool moved_left) {
-    if (this->encoderHandler) encoderHandler->encoderEvent(encoder, moved_left);
+void Input::updateEncoder(int encoder, bool moved_left)
+{
+    if (this->encoderHandler)
+        encoderHandler->encoderEvent(encoder, moved_left);
 }
