@@ -136,6 +136,16 @@ public:
         }
     }
 
+    virtual void nextPage()
+    {
+
+    }
+
+    virtual void prevPage()
+    {
+        
+    }
+
     virtual SynthEngine *getEngine(int i)
     {
         return this->engines[i];

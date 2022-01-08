@@ -7,12 +7,13 @@
 #include "SynthEngine.h"
 #include "VoiceGroup.h"
 
-class Synth : public KeyboardHandler
+class Synth : public KeyboardHandler, public MenuButtonHandler
 {
 public:
     Synth(SynthManager* initialSynth);
 
     void keyboardEvent(int button, bool pressed);
+    void menuButtonEvent(MenuButtonHandler::BUTTONS button, bool pressed);
 
     AudioMixer4* getOutput();
 protected:

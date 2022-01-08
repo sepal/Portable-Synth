@@ -16,4 +16,7 @@ class SynthManager
 {
 public:
     virtual SynthEngine* getEngine(int i);
+
+    virtual void nextPage();
+    virtual void prevPage();
 };
