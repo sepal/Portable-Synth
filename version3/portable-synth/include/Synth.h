@@ -14,14 +14,12 @@ public:
 
     void keyboardEvent(int button, bool pressed);
 
+    AudioMixer4* getOutput();
 protected:
+    AudioConnection* cords[1];
+    AudioMixer4* output;
     int octave;
 
     SynthManager* synth;
     VoiceGroup* voices;
-    AudioOutputI2S* i2s1;
-    AudioMixer4* outputMixer;
-    AudioConnection* voicesCord;
-    AudioConnection* patchCord1;
-    AudioConnection* patchCord2;
 };

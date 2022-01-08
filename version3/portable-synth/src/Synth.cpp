@@ -6,12 +6,9 @@ Synth::Synth(SynthManager* initialSynth)
     this->synth = initialSynth;
 
     this->voices = new VoiceGroup(this->synth);
-    this->outputMixer = new AudioMixer4();
-    this->i2s1 = new AudioOutputI2S();
+    this->output = new AudioMixer4();
     
-    this->voicesCord = new AudioConnection(*this->voices->getOutput(), 0, *this->outputMixer, 0);
-    this->patchCord1 = new AudioConnection(*this->outputMixer, 0, *i2s1, 0);
-    this->patchCord2 = new AudioConnection(*this->outputMixer, 0, *i2s1, 1);
+    this->cords[0] = new AudioConnection(*this->voices->getOutput(), 0, *this->output, 0);
 }
 
 void Synth::keyboardEvent(int button, bool pressed)
@@ -27,4 +24,9 @@ void Synth::keyboardEvent(int button, bool pressed)
         this->voices->noteOff(n);
     }
     AudioInterrupts();
+}
+
+AudioMixer4* Synth::getOutput()
+{
+    return this->output;
 }
